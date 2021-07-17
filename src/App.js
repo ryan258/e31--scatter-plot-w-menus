@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { scaleLinear, extent, format } from 'd3'
+import { scaleLinear, scaleOrdinal, extent, format } from 'd3'
 import ReactDropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 
@@ -56,6 +56,8 @@ const App = () => {
   const yValue = (d) => d[yAttribute]
   const yAxisLabel = getLabel(yAttribute)
 
+  const colorValue = (d) => d.species
+
   if (!data) {
     return <pre>'Loading...'</pre>
   }
@@ -77,6 +79,12 @@ const App = () => {
 
   const siFormat = format('.2s')
   const xAxisTickFormat = (tickValue) => siFormat(tickValue).replace('G', 'B')
+
+  const colorScale = scaleOrdinal()
+    .domain(data.map(colorValue)) // the 3 species
+    // console.log(colorScale.domain()) // renders out the 3 species
+    .range(['#E6842A', '#137B80', '#8E6C8A']) // the range of colors
+  // console.log(colorScale.range()) // we get an array of our 3 colors
 
   return (
     <>
@@ -123,9 +131,11 @@ const App = () => {
           <Marks //
             data={data}
             xScale={xScale}
-            yScale={yScale}
             xValue={xValue}
+            yScale={yScale}
             yValue={yValue}
+            colorScale={colorScale}
+            colorValue={colorValue}
             tooltipFormat={xAxisTickFormat}
             circleRadius={5}
           />
