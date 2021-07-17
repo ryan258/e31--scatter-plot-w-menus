@@ -6,8 +6,9 @@ import 'react-dropdown/style.css'
 import AxisBottom from './components/AxisBottom'
 import AxisLeft from './components/AxisLeft'
 import Marks from './components/Marks'
+import ColorLegend from './components/ColorLegend'
 import { useData } from './hooks/useData'
-import Dropdown from './components/Dropdown'
+// import Dropdown from './components/Dropdown'
 // import { message } from './utils/message'
 // useCallback - good for adding event listeners only once
 // - arg0 - function you want to control
@@ -18,7 +19,7 @@ const menuHeight = 82
 const height = 500 - menuHeight
 const margin = {
   top: 20,
-  right: 30,
+  right: 200,
   bottom: 65,
   left: 90
 }
@@ -57,6 +58,7 @@ const App = () => {
   const yAxisLabel = getLabel(yAttribute)
 
   const colorValue = (d) => d.species
+  const colorLegendLabel = 'Species'
 
   if (!data) {
     return <pre>'Loading...'</pre>
@@ -76,6 +78,8 @@ const App = () => {
   const yScale = scaleLinear() //
     .domain(extent(data, yValue))
     .range([0, innerHeight])
+
+  const circleRadius = 5
 
   const siFormat = format('.2s')
   const xAxisTickFormat = (tickValue) => siFormat(tickValue).replace('G', 'B')
@@ -128,6 +132,22 @@ const App = () => {
           >
             {xAxisLabel}
           </text>
+          <g transform={`translate(${innerWidth + 50}, 60)`}>
+            <text //
+              x={35}
+              y={-25}
+              textAnchor="middle"
+              className="axis-label"
+            >
+              {colorLegendLabel}
+            </text>
+            <ColorLegend //
+              tickSpacing={22}
+              tickSize={circleRadius}
+              tickTextOffset={12}
+              colorScale={colorScale}
+            />
+          </g>
           <Marks //
             data={data}
             xScale={xScale}
@@ -137,7 +157,7 @@ const App = () => {
             colorScale={colorScale}
             colorValue={colorValue}
             tooltipFormat={xAxisTickFormat}
-            circleRadius={5}
+            circleRadius={circleRadius}
           />
         </g>
       </svg>
