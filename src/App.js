@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { scaleLinear, extent, format } from 'd3'
 import AxisBottom from './components/AxisBottom'
 import AxisLeft from './components/AxisLeft'
 import Marks from './components/Marks'
 import { useData } from './hooks/useData'
+import Dropdown from './components/Dropdown'
 // import { message } from './utils/message'
 // useCallback - good for adding event listeners only once
 // - arg0 - function you want to control
@@ -23,17 +24,29 @@ const yAxisLabelOffset = 40
 const App = () => {
   const data = useData()
 
+  const initialXAttribute = 'petal_length'
+  const [xAttribute, setXAttribute] = useState(initialXAttribute)
+  // console.log(xAttribute)
+  const xValue = (d) => d[xAttribute]
+  const xAxisLabel = 'Petal Length'
+
   if (!data) {
     return <pre>'Loading...'</pre>
   }
 
+  // console.log(data.columns)
   // console.log(data[0])
 
   const innerHeight = height - margin.top - margin.bottom
   const innerWidth = width - margin.right - margin.left
 
-  const xValue = (d) => d.petal_length
-  const xAxisLabel = 'Petal Length'
+  const attributes = [
+    { value: 'sepal_length', label: 'Sepal Length' },
+    { value: 'sepal_width', label: 'Sepal Width' },
+    { value: 'petal_length', label: 'Petal Length' },
+    { value: 'petal_width', label: 'Petal Width' },
+    { value: 'species', label: 'Species' }
+  ]
 
   const yValue = (d) => d.sepal_width
   const yAxisLabel = 'Sepal Width'
@@ -50,47 +63,53 @@ const App = () => {
   const siFormat = format('.2s')
   const xAxisTickFormat = (tickValue) => siFormat(tickValue).replace('G', 'B')
 
-  // Fortunately scales can tell us their ticks
-  // console.log(xScale.ticks())
-
   return (
-    <svg width={width} height={height}>
-      <g transform={`translate(${margin.left}, ${margin.top})`}>
-        {/* use the tick generation logic */}
-        <AxisBottom //
-          xScale={xScale}
-          innerHeight={innerHeight}
-          tickFormat={xAxisTickFormat}
-          tickOffset={5}
-        />
-        <text //
-          textAnchor="middle"
-          className="axis-label"
-          transform={`translate(${-yAxisLabelOffset},
+    <>
+      <label htmlFor="x-select">X:</label>
+      <Dropdown //
+        options={attributes}
+        selectedValue={xAttribute}
+        onSelectedValueChange={setXAttribute}
+        id="x-select"
+      />
+      <svg width={width} height={height}>
+        <g transform={`translate(${margin.left}, ${margin.top})`}>
+          {/* use the tick generation logic */}
+          <AxisBottom //
+            xScale={xScale}
+            innerHeight={innerHeight}
+            tickFormat={xAxisTickFormat}
+            tickOffset={5}
+          />
+          <text //
+            textAnchor="middle"
+            className="axis-label"
+            transform={`translate(${-yAxisLabelOffset},
           ${innerHeight / 2}) rotate(-90) `}
-        >
-          {yAxisLabel}
-        </text>
-        <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={5} />
-        <text //
-          x={innerWidth / 2}
-          textAnchor="middle"
-          y={innerHeight + xAxisLabelOffset}
-          className="axis-label"
-        >
-          {xAxisLabel}
-        </text>
-        <Marks //
-          data={data}
-          xScale={xScale}
-          yScale={yScale}
-          xValue={xValue}
-          yValue={yValue}
-          tooltipFormat={xAxisTickFormat}
-          circleRadius={5}
-        />
-      </g>
-    </svg>
+          >
+            {yAxisLabel}
+          </text>
+          <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={5} />
+          <text //
+            x={innerWidth / 2}
+            textAnchor="middle"
+            y={innerHeight + xAxisLabelOffset}
+            className="axis-label"
+          >
+            {xAxisLabel}
+          </text>
+          <Marks //
+            data={data}
+            xScale={xScale}
+            yScale={yScale}
+            xValue={xValue}
+            yValue={yValue}
+            tooltipFormat={xAxisTickFormat}
+            circleRadius={5}
+          />
+        </g>
+      </svg>
+    </>
   )
 }
 
