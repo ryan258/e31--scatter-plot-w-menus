@@ -21,6 +21,7 @@ pre {
 
 .tick text {
   fill: #635f5d;
+  cursor: pointer;
 }
 
 .axis-label,

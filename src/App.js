@@ -25,6 +25,7 @@ const margin = {
 }
 const xAxisLabelOffset = 50
 const yAxisLabelOffset = 40
+const fadeOpacity = 0.25
 
 const attributes = [
   { value: 'sepal_length', label: 'Sepal Length' },
@@ -44,6 +45,8 @@ const getLabel = (value) => {
 
 const App = () => {
   const data = useData()
+  const [hoveredValue, setHoveredValue] = useState(null)
+  // console.log(hoveredValue)
 
   const initialXAttribute = 'petal_length'
   const [xAttribute, setXAttribute] = useState(initialXAttribute)
@@ -63,6 +66,8 @@ const App = () => {
   if (!data) {
     return <pre>'Loading...'</pre>
   }
+
+  const filteredData = data.filter((d) => hoveredValue === colorValue(d))
 
   // console.log(data.columns)
   // console.log(data[0])
@@ -141,15 +146,34 @@ const App = () => {
             >
               {colorLegendLabel}
             </text>
+
             <ColorLegend //
               tickSpacing={22}
               tickSize={circleRadius}
               tickTextOffset={12}
               colorScale={colorScale}
+              onHover={setHoveredValue}
+              hoveredValue={hoveredValue}
+              fadeOpacity={fadeOpacity}
+            />
+          </g>
+          <g opacity={hoveredValue ? fadeOpacity : 1}>
+            <Marks //
+              data={data}
+              // data={filteredData}
+              xScale={xScale}
+              xValue={xValue}
+              yScale={yScale}
+              yValue={yValue}
+              colorScale={colorScale}
+              colorValue={colorValue}
+              tooltipFormat={xAxisTickFormat}
+              circleRadius={circleRadius}
             />
           </g>
           <Marks //
-            data={data}
+            // data={data}
+            data={filteredData}
             xScale={xScale}
             xValue={xValue}
             yScale={yScale}
