@@ -11,7 +11,8 @@ import Dropdown from './components/Dropdown'
 // - arg1 - [array, of, dependencies] - things it needs to run
 
 const width = 960
-const height = 500
+const menuHeight = 75
+const height = 500 - menuHeight
 const margin = {
   top: 20,
   right: 30,
@@ -29,6 +30,12 @@ const App = () => {
   // console.log(xAttribute)
   const xValue = (d) => d[xAttribute]
   const xAxisLabel = 'Petal Length'
+
+  const initialYAttribute = 'sepal_width'
+  const [yAttribute, setYAttribute] = useState(initialYAttribute)
+  // console.log(yAttribute)
+  const yValue = (d) => d[yAttribute]
+  const yAxisLabel = 'Sepal Width'
 
   if (!data) {
     return <pre>'Loading...'</pre>
@@ -48,9 +55,6 @@ const App = () => {
     { value: 'species', label: 'Species' }
   ]
 
-  const yValue = (d) => d.sepal_width
-  const yAxisLabel = 'Sepal Width'
-
   const xScale = scaleLinear() //
     .domain(extent(data, xValue))
     .range([0, innerWidth])
@@ -66,11 +70,18 @@ const App = () => {
   return (
     <>
       <label htmlFor="x-select">X:</label>
-      <Dropdown //
+      <Dropdown // X Axis
         options={attributes}
         selectedValue={xAttribute}
         onSelectedValueChange={setXAttribute}
         id="x-select"
+      />
+      <label htmlFor="y-select">Y:</label>
+      <Dropdown // X Axis
+        options={attributes}
+        selectedValue={yAttribute}
+        onSelectedValueChange={setYAttribute}
+        id="y-select"
       />
       <svg width={width} height={height}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
