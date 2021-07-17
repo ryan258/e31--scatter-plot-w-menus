@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { scaleLinear, extent, format } from 'd3'
+import ReactDropdown from 'react-dropdown'
+import 'react-dropdown/style.css'
+
 import AxisBottom from './components/AxisBottom'
 import AxisLeft from './components/AxisLeft'
 import Marks from './components/Marks'
@@ -11,7 +14,7 @@ import Dropdown from './components/Dropdown'
 // - arg1 - [array, of, dependencies] - things it needs to run
 
 const width = 960
-const menuHeight = 75
+const menuHeight = 82
 const height = 500 - menuHeight
 const margin = {
   top: 20,
@@ -77,20 +80,20 @@ const App = () => {
 
   return (
     <>
-      <label htmlFor="x-select">X:</label>
-      <Dropdown // X Axis
-        options={attributes}
-        selectedValue={xAttribute}
-        onSelectedValueChange={setXAttribute}
-        id="x-select"
-      />
-      <label htmlFor="y-select">Y:</label>
-      <Dropdown // X Axis
-        options={attributes}
-        selectedValue={yAttribute}
-        onSelectedValueChange={setYAttribute}
-        id="y-select"
-      />
+      <div className="menus-container">
+        <span className="dropdown-label">X</span>
+        <ReactDropdown // X Axis
+          options={attributes}
+          value={xAttribute}
+          onChange={({ value }) => setXAttribute(value)}
+        />
+        <span className="dropdown-label">Y</span>
+        <ReactDropdown // X Axis
+          options={attributes}
+          value={yAttribute}
+          onChange={({ value }) => setYAttribute(value)}
+        />
+      </div>
       <svg width={width} height={height}>
         <g transform={`translate(${margin.left}, ${margin.top})`}>
           {/* use the tick generation logic */}

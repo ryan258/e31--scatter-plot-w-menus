@@ -15,14 +15,6 @@ pre {
   font-size: 7em;
 }
 
-label,
-select {
-  font-size: 2em;
-}
-select option {
-  font-size: 1rem;
-}
-
 .tick line {
   stroke: #c0c0bb;
 }
@@ -35,7 +27,32 @@ select option {
   fill: #137b80;
 }
 
-.axis-label {
+.axis-label,
+.dropdown-label {
   font-size: 2.5em;
   fill: #635f5d;
+  color: #635f5d;
+}
+
+.menus-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-right: 60px;
+}
+
+.dropdown-label {
+  margin-left: 100px;
+  margin-right: 10px;
+}
+
+.Dropdown-root {
+  font-size: 1.5em;
+  width: 250px;
+  display: inline-block;
+}
+
+div.Dropdown-menu {
+  max-height: 500px;
 }
